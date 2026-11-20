@@ -5,6 +5,7 @@
 | Package | Description |
 | --- | --- |
 | [`@mosugi/emdash-plugin-external-media`](./packages/external-media) | Import images from allowed URLs (e.g. Canva exports) into the media library, or replace them in place, as MCP tools. |
+| [`@mosugi/emdash-plugin-og-image`](./packages/og-image) | Default Open Graph image (title and site name) for entries without one, rendered on Workers. |
 
 ## Development
 
