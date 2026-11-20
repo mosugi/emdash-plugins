@@ -1,6 +1,6 @@
 {
   "name": "@mosugi/emdash-plugin-og-image",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "EmDash plugin that generates a default Open Graph image (title and site name) for entries without one",
   "type": "module",
   "author": "mosugi",
