@@ -225,20 +225,25 @@ function hostOf(url: string): string {
 	}
 }
 
-export function imageUrl(origin: string, collection: string, id: string, version: string): string {
-	const params = new URLSearchParams({ collection, id, v: version });
-	return `${origin}/_emdash/api/plugins/${PLUGIN_ID}/${ROUTE}?${params}`;
+/**
+ * Site-relative path of the generated image for an entry, for templates that
+ * show it in place of a missing featured image. `id` is the database id (ULID),
+ * `title` only feeds the cache-busting `v` token; the route reads the title itself.
+ */
+export function ogImagePath(collection: string, id: string, title: string): string {
+	const params = new URLSearchParams({ collection, id, v: hash(`${title}\n${PLUGIN_VERSION}`) });
+	return `/_emdash/api/plugins/${PLUGIN_ID}/${ROUTE}?${params}`;
 }
 
 /** The contributions for a page, or null when the page has its own image or is out of scope. */
-export function metadataFor(page: PublicPageContext, collections: string[], siteName: string): PageMetadataContribution[] | null {
+export function metadataFor(page: PublicPageContext, collections: string[]): PageMetadataContribution[] | null {
 	if (page.kind !== "content" || !page.content) return null;
 	if (!collections.includes(page.content.collection)) return null;
 	if (page.seo?.ogImage || page.image) return null;
 
 	const origin = (page.siteUrl && URL.canParse(page.siteUrl) ? new URL(page.siteUrl) : new URL(page.url)).origin;
 	const title = page.seo?.ogTitle ?? page.pageTitle ?? page.title ?? "";
-	const url = imageUrl(origin, page.content.collection, page.content.id, hash(`${title}\n${siteName}\n${PLUGIN_VERSION}`));
+	const url = `${origin}${ogImagePath(page.content.collection, page.content.id, title)}`;
 	return [
 		{ kind: "property", property: "og:image", content: url },
 		{ kind: "property", property: "og:image:width", content: String(WIDTH) },
@@ -297,7 +302,7 @@ export function createPlugin(options: OgImageOptions = {}) {
 	const monoFontFamily = options.monoFontFamily ?? "JetBrains Mono";
 	const theme = { ...DEFAULT_THEME, ...options.theme };
 
-	const siteNameOf = (ctx: PluginContext, fallback?: string) => options.siteName ?? (ctx.site.name || fallback || "");
+	const siteNameOf = (ctx: PluginContext) => options.siteName ?? ctx.site.name ?? "";
 
 	return definePlugin({
 		id: PLUGIN_ID,
@@ -305,7 +310,7 @@ export function createPlugin(options: OgImageOptions = {}) {
 		capabilities: ["content:read", "network:request"],
 		allowedHosts: FONT_HOSTS,
 		hooks: {
-			"page:metadata": async (event, ctx) => metadataFor(event.page, collections, siteNameOf(ctx, event.page.siteName)),
+			"page:metadata": async (event) => metadataFor(event.page, collections),
 		},
 		routes: {
 			[ROUTE]: {

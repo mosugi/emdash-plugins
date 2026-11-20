@@ -50,6 +50,24 @@ a `content` reference in the page context (the EmDash blog template does).
   stale-while-revalidate=604800`, and rendered PNGs are kept in the Workers
   Cache API (`caches.default`) keyed by the URL.
 
+## Using the image as a featured image fallback
+
+`ogImagePath(collection, id, title)` returns the site-relative URL of the
+generated image, so templates can show it where an entry has no featured
+image (the same image as `og:image`):
+
+```astro
+---
+import { ogImagePath } from "@mosugi/emdash-plugin-og-image";
+---
+{post.data.featured_image
+  ? <Image image={post.data.featured_image} />
+  : <img src={ogImagePath("posts", post.data.id, post.data.title)} width="1200" height="630" alt="" />}
+```
+
+`id` is the database id (`entry.data.id`), not the slug. The card is text, so
+`object-fit: contain` keeps it whole in boxes of other aspect ratios.
+
 ## Options
 
 | Option | Default | |
