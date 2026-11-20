@@ -1,0 +1,59 @@
+{
+  "name": "@mosugi/emdash-plugin-external-media",
+  "version": "1.1.0",
+  "description": "EmDash plugin that imports images from allowed URLs (e.g. Canva exports) into the media library or replaces them in place, exposed as MCP tools",
+  "type": "module",
+  "author": "mosugi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mosugi/emdash-plugins.git",
+    "directory": "packages/external-media"
+  },
+  "bugs": {
+    "url": "https://github.com/mosugi/emdash-plugins/issues"
+  },
+  "homepage": "https://github.com/mosugi/emdash-plugins/tree/main/packages/external-media#readme",
+  "keywords": [
+    "emdash",
+    "emdash-plugin",
+    "astro",
+    "cloudflare",
+    "canva",
+    "mcp"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "tsdown",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "peerDependencies": {
+    "astro": ">=6.0.0",
+    "emdash": "^1.3.0"
+  },
+  "devDependencies": {
+    "astro": "^7.3.2",
+    "emdash": "^1.3.0",
+    "tsdown": "^0.23.7",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.16"
+  }
+}
