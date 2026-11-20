@@ -1,0 +1,62 @@
+{
+  "name": "@mosugi/emdash-plugin-og-image",
+  "version": "0.0.0",
+  "description": "EmDash plugin that generates a default Open Graph image (title and site name) for entries without one",
+  "type": "module",
+  "author": "mosugi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mosugi/emdash-plugins.git",
+    "directory": "packages/og-image"
+  },
+  "bugs": {
+    "url": "https://github.com/mosugi/emdash-plugins/issues"
+  },
+  "homepage": "https://github.com/mosugi/emdash-plugins/tree/main/packages/og-image#readme",
+  "keywords": [
+    "emdash",
+    "emdash-plugin",
+    "astro",
+    "cloudflare",
+    "og-image",
+    "open-graph"
+  ],
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "prepack": "tsdown",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "exports": {
+      ".": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "dependencies": {
+    "@cf-wasm/og": "^0.5.0"
+  },
+  "peerDependencies": {
+    "astro": ">=6.0.0",
+    "emdash": "^1.3.0"
+  },
+  "devDependencies": {
+    "astro": "^7.3.2",
+    "emdash": "^1.3.0",
+    "tsdown": "^0.23.7",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.16"
+  }
+}
