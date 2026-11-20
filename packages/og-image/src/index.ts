@@ -325,11 +325,6 @@ export function createPlugin(options: OgImageOptions = {}) {
 					const id = typeof query.id === "string" ? query.id : "";
 					if (!collections.includes(collection) || !id || id.length > 100) return textResponse(404, "Not found");
 
-					const cache = edgeCache();
-					const cacheKey = new URL(ctx.request.url).toString();
-					const cached = await cache?.match(cacheKey).catch(() => undefined);
-					if (cached?.ok) return pngResponse(new Uint8Array(await cached.arrayBuffer()));
-
 					const entry = await ctx.content?.get(collection, id);
 					// Drafts and scheduled entries stay private: their titles are not public yet.
 					if (!entry || entry.status !== "published") return textResponse(404, "Not found");
@@ -338,6 +333,14 @@ export function createPlugin(options: OgImageOptions = {}) {
 					const title = (entry.seo?.title || (typeof fieldTitle === "string" ? fieldTitle : "") || entry.slug || "").trim();
 					const siteName = siteNameOf(ctx);
 					const host = hostOf(ctx.site.url) || hostOf(ctx.request.url);
+
+					// Key the cache on what the image is drawn from, not on the request URL:
+					// `v` and any other query parameters cannot force a fresh render.
+					const cache = edgeCache();
+					const digest = hash(JSON.stringify([title, siteName, host, fontFamily, monoFontFamily, theme, PLUGIN_VERSION]));
+					const cacheKey = `${new URL(ctx.request.url).origin}/_emdash/api/plugins/${PLUGIN_ID}/${ROUTE}/${encodeURIComponent(collection)}/${encodeURIComponent(id)}/${digest}`;
+					const cached = await cache?.match(cacheKey).catch(() => undefined);
+					if (cached?.ok) return pngResponse(new Uint8Array(await cached.arrayBuffer()));
 
 					if (!ctx.http) return textResponse(500, "Network access is not available");
 					const fetcher: HttpFetch = (url, init) => ctx.http!.fetch(url, init);
