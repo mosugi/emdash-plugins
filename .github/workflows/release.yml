@@ -30,3 +30,7 @@ jobs:
           publish: pnpm run changeset-publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Only for the first publish of a new package (npm allows a trusted
+          # publisher only on an existing package). Remove the secret once the
+          # Trusted Publisher is configured; OIDC is used otherwise.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

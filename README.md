@@ -30,5 +30,6 @@ Trusted Publishing (OIDC), so no npm token is stored in the repository.
 ### Adding a package
 
 1. Create `packages/<name>` with `"name": "@mosugi/emdash-plugin-<name>"`, the same `scripts` / `publishConfig` shape as `packages/external-media`, and a README.
-2. Publish the first version once by hand (`pnpm publish --access public` from the package directory), because npm only lets you configure a trusted publisher on an existing package.
+2. The first version has to be published with a token, because npm only lets you configure a trusted publisher on an existing package. Add an npm granular access token (publish rights on `@mosugi`) as the repository secret `NPM_TOKEN`, then merge to `main`; the Release workflow publishes every package version not yet on npm. Publishing by hand (`pnpm publish --access public` in the package directory) also works.
 3. On npmjs.com, open the package's Settings → Trusted Publisher and add GitHub Actions with repository `mosugi/emdash-plugins` and workflow `release.yml`.
+4. Delete the `NPM_TOKEN` secret. Later releases use OIDC only.
