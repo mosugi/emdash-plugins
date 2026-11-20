@@ -1,0 +1,14 @@
+packages:
+  - "packages/*"
+
+allowBuilds:
+  esbuild: true
+  workerd: false
+  sharp: false
+
+# Supply-chain hardening, same policy as emdash-blog.
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - emdash
+  - "@emdash-cms/*"
+blockExoticSubdeps: true

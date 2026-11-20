@@ -1,0 +1,25 @@
+{
+  "name": "emdash-plugins",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mosugi/emdash-plugins.git"
+  },
+  "scripts": {
+    "build": "pnpm -r run build",
+    "typecheck": "pnpm -r run typecheck",
+    "changeset": "changeset",
+    "changeset-version": "changeset version && pnpm install --lockfile-only",
+    "changeset-publish": "pnpm run build && changeset publish"
+  },
+  "engines": {
+    "node": ">=22.16"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/cli": "^2.29.8"
+  }
+}
