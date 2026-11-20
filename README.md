@@ -22,6 +22,9 @@ In the workspace, `exports` point at `src/*.ts`; the published package uses
 
 Releases use [Changesets](https://github.com/changesets/changesets) and npm
 Trusted Publishing (OIDC), so no npm token is stored in the repository.
+Publishing runs `pnpm -r publish` directly (not `changeset publish`) so the
+OIDC and publish output shows up in the workflow log, then `changeset tag`
+creates the tags and GitHub releases.
 
 1. Add a changeset with your change: `pnpm changeset`.
 2. Merge to `main`. The Release workflow opens a "Version Packages" PR.
@@ -30,6 +33,6 @@ Trusted Publishing (OIDC), so no npm token is stored in the repository.
 ### Adding a package
 
 1. Create `packages/<name>` with `"name": "@mosugi/emdash-plugin-<name>"`, the same `scripts` / `publishConfig` shape as `packages/external-media`, and a README.
-2. The first version has to be published with a token, because npm only lets you configure a trusted publisher on an existing package. Add an npm granular access token (publish rights on `@mosugi`) as the repository secret `NPM_TOKEN`, then merge to `main`; the Release workflow publishes every package version not yet on npm. Publishing by hand (`pnpm publish --access public` in the package directory) also works.
+2. npm only lets you configure a trusted publisher on a package that already exists, so publish a placeholder once by hand (e.g. a `0.0.0` package.json with only `name` and `version`).
 3. On npmjs.com, open the package's Settings → Trusted Publisher and add GitHub Actions with repository `mosugi/emdash-plugins` and workflow `release.yml`.
-4. Delete the `NPM_TOKEN` secret. Later releases use OIDC only.
+4. Merge to `main` (or run the Release workflow by hand). It publishes every package version not yet on npm.
