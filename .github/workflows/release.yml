@@ -16,6 +16,9 @@ jobs:
       id-token: write # npm Trusted Publishing (OIDC) and provenance
     steps:
       - uses: actions/checkout@v4
+        with:
+          # changeset tag skips versions whose tag already exists; it needs the tags.
+          fetch-depth: 0
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
